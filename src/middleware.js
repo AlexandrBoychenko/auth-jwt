@@ -13,6 +13,7 @@ export async function middleware(request) {
     const isAuthPageRequested = isAuthPages(nextUrl.pathname);
 
     if (isAuthPageRequested) {
+        // Delete token for non auth user or redirect them to home if login page is invoked
         if (!hasVerifiedToken) {
             const response = NextResponse.next();
             response.cookies.delete("token");
@@ -23,6 +24,7 @@ export async function middleware(request) {
     }
 
     if (!hasVerifiedToken) {
+        // Redirect user to the previous page after login
         const searchParams = new URLSearchParams(nextUrl.searchParams);
         searchParams.set("next", nextUrl.pathname);
         const response = NextResponse.redirect(
