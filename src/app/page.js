@@ -4,7 +4,7 @@ import Link from "next/link";
 import 'tailwindcss/tailwind.css';
 
 export default function Home() {
-  const auth = useAuth();
+  const { auth } = useAuth();
   return <div className='flex flex-col justify-center items-center md:h-screen'>
     <h1>Some Home Page</h1>
     <header>

@@ -4,7 +4,7 @@ import { getJwtSecretKey } from "@/libs/auth";
 
 export async function POST(request) {
     const body = await request.json();
-    if (body.username === "admin" && body.password === "admin") {
+    if (body.username === "test-name" && body.password === "password1234") {
         const token = await new SignJWT({
             username: body.username,
         })
@@ -19,6 +19,12 @@ export async function POST(request) {
         response.cookies.set({
             name: "token",
             value: token,
+            path: "/",
+        });
+        // Temporary stub for user profile
+        response.cookies.set({
+            name: "user-name",
+            value: body.username,
             path: "/",
         });
         return response;
