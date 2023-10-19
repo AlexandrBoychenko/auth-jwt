@@ -2,12 +2,10 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import 'tailwindcss/tailwind.css';
-import { Terminal } from 'lucide-react';
 import { useState } from 'react';
 import { AlertUI } from '@/components/ui/alertUI';
 import { errors } from '../consts/errors';
+import 'tailwindcss/tailwind.css';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,6 +24,7 @@ export default function LoginPage() {
     });
     try {
       const { success } = await res.json();
+      console.log('success: ', success);
       if (success) {
         router.push('/protected');
         router.refresh();
