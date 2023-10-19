@@ -1,5 +1,5 @@
 ## auth-jwt
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project with Tailwind CSS and Shadcn UI. The main purpose it's to expose JWT authentication with server and client parts with user friendly UI 
 
 ## Getting Started
 
@@ -16,22 +16,15 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+You'll see an abstract site page with Login button, after its clicked login page is opened.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+**The only correct credentials**
+username: test-name 
+password: password1234**
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+If the login form filled with correct data and Login button is ckicked user redirects to the dashboard mock page. If it's not correct, an appropriate upper error message is shown. Fields cannot be empty, in this case basic validation blocks login form submit.
+JWT authorization is working on server-side using POST request and it's handled on client with token stored in session cookies.
+User may logout from an Logout button on the dashboard page, in this way the JWT token removed and user redirects to Login page.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+If user tries to open Login page during the valid JWT session the main page is opened with a new message about its status.
+In case if user intends to go to any page that requires authentication he redirects to login page with stored previous path that should be opened after login is finished well.
