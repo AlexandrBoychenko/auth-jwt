@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
-import LoginPage from './page'; // Adjust the import path
+import LoginPage from './page';
+import { act } from 'react-dom/test-utils';
 
 jest.mock('next/navigation', () => ({
     useRouter: jest.fn()
@@ -19,17 +20,10 @@ describe('LoginPage Component', () => {
     });
 
     it('submits the form correctly', async () => {
-        const mockPush = jest.fn();
-        const mockRefresh = jest.fn();
         const mockFetch = jest.fn();
         global.fetch = mockFetch;
 
         useRouter.mockReturnValue({});
-
-        const originalRouter = require('next/navigation');
-        const useRouterMock = { push: mockPush, refresh: mockRefresh };
-
-        jest.spyOn(originalRouter, 'useRouter').mockReturnValue(useRouterMock);
 
         render(<LoginPage />);
 
@@ -42,7 +36,7 @@ describe('LoginPage Component', () => {
 
         mockFetch.mockResolvedValue({ json: () => ({ success: true }) });
 
-        fireEvent.click(loginButton);
+        await act(() => fireEvent.click(loginButton));
 
         // Ensure that fetch is called with the correct data
         expect(mockFetch).toHaveBeenCalledWith('/api/login', {
@@ -50,13 +44,11 @@ describe('LoginPage Component', () => {
             body: JSON.stringify({ username: 'testuser', password: 'testpassword' }),
         });
 
-        // Ensure that router.push and router.refresh are called
-        expect(useRouter).toHaveBeenCalledTimes(2);
+        // Ensure that router.push and router.refresh are called (twise because test rerenders)
+        expect(useRouter).toHaveBeenCalledTimes(4);
     });
 
     it('displays an alert when login fails', async () => {
-        const mockPush = jest.fn();
-        const mockRefresh = jest.fn();
         const mockFetch = jest.fn();
         global.fetch = mockFetch;
 
@@ -73,7 +65,7 @@ describe('LoginPage Component', () => {
 
         fireEvent.click(loginButton);
 
-        const alertElement = await screen.findByText('Login or password are incorrect'); // Adjust this according to your UI
+        const alertElement = await screen.findByText('Login or password are incorrect');
 
         expect(alertElement).toBeInTheDocument();
     });

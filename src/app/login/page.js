@@ -24,7 +24,6 @@ export default function LoginPage() {
     });
     try {
       const { success } = await res.json();
-      console.log('success: ', success);
       if (success) {
         router.push('/protected');
         router.refresh();
