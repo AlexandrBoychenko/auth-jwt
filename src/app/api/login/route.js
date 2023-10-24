@@ -31,10 +31,8 @@ export async function POST(request) {
             return response;
         }
         return NextResponse.json({ success: false });
-
-
     } catch (error) {
-        NextResponse.error()
+        console.error(error)
     }
 
 }

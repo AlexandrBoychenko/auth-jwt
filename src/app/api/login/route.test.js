@@ -2,21 +2,22 @@ import request from 'supertest';
 import { POST } from './route';
 import { getJwtSecretKey } from '../../../libs/auth';
 import { NextResponse } from "next/server";
+import * as Jose from "jose";
 
 jest.mock('../../../libs/auth', () => ({
     getJwtSecretKey: jest.fn(),
 }));
 
-jest.mock('next/server', () => ({
-    NextResponse: { json: jest.fn() }
+jest.mock('next/dist/server/web/exports/next-response.js', () => ({
+    Response: jest.fn(),
 }));
 
 jest.mock('jose', () => ({
-    SignJWT: jest.fn()
+    SignJWT: jest.fn(() => Jose.SignJWT)
 }));
 
 describe('POST API Endpoint', () => {
-    it('should return a success response with a token for valid credentials', async () => {
+    it('should return a success response with a token for valid credentials', async (done) => {
         getJwtSecretKey.mockReturnValue('your-secret-key');
 
         const validCredentials = {
@@ -24,8 +25,9 @@ describe('POST API Endpoint', () => {
             password: 'password1234',
         };
 
+
         const response = await request(POST)
-            .post('/')
+            .post('/api/login')
             .send(validCredentials);
 
         expect(response.status).toBe(200);
