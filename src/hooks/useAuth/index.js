@@ -18,6 +18,7 @@ export function useAuth() {
 
     const logout = () => {
         cookies.remove("token");
+        cookies.remove("user-name");
         setAuth(null);
         router.push('/login');
     };

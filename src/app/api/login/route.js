@@ -26,13 +26,15 @@ export async function POST(request) {
             response.cookies.set({
                 name: "user-name",
                 value: body.username,
-                path: "/",
+                path: "/apima,e",
             });
             return response;
         }
-        return NextResponse.json({ success: false });
+        return NextResponse.json(
+            { success: false },
+            { status: 200, headers: { "content-type": "application/json" } }
+        );
     } catch (error) {
-        console.error(error)
+        return NextResponse.error(error)
     }
-
 }

@@ -16,3 +16,7 @@ export async function verifyJwtToken(token) {
         return null;
     }
 }
+
+export function isUserRestricted() {
+    return process.env.NEXT_IS_USER_RESTRICTED
+};

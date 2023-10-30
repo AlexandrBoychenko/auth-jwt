@@ -18,22 +18,31 @@ export default function LoginPage() {
     const formData = new FormData(event.target);
     const username = formData.get('username');
     const password = formData.get('password');
-    const res = await fetch('/api/login', {
+    const loginRes = await fetch('/api/login', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     });
+
+    const authRes = await fetch('/api/auth', {
+      method: 'POST',
+      body: JSON.stringify({ username }),
+    });
+
     try {
-      const { success } = await res.json();
-      if (success) {
-        router.push('/protected');
+      const { userAllowed, restricted } = await authRes.json();
+      const { success } = await loginRes.json();
+      const isRestricted = JSON.parse(restricted);
+
+      if (isRestricted) throw new Error('User is restricted');
+      if (success && userAllowed) {
         router.refresh();
+        router.push('/protected');
       } else {
         setShowAlert('unauthorized');
       }
     } catch (error) {
       setShowAlert('default');
     }
-
   };
 
   const onContainerClick = () => setShowAlert('');
